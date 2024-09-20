@@ -1,0 +1,211 @@
+# Example JNOS/BSD 2.0 autoexec.nos file
+#
+log on
+#
+# Maximize TCP performance for standard LANs
+#
+tcp mss 1460
+tcp window 5840
+tcp timert linear
+tcp irtt 5500
+tcp maxw 9000
+tcp bl 2
+tcp ret 12
+tcp win 2048
+tcp syn on
+tcp maxwait 30000
+tcp retries 5
+# Enable ping replies
+icmp echo on
+icmp trace 2
+# IP TTL default
+ip ttl 225
+ip rt 4
+
+#
+# Hostname and default ax25 call
+#
+hostname jnos2bsd.coolsite.net
+ax25 mycall WA4XYZ-8
+ip address 192.168.44.3
+#ax25 alias MYBBS
+
+#
+# Local DNS is done via the 'domain.txt' file!
+# This file is arranged similarly to a BIND zone file.
+#
+# Create a network interface. This allows us to talk to the
+# box on which JNOS is running - and in turn - to the internet.
+#
+# Before doing anything, we need to destroy the old interface:
+shell ifconfig tun0 destroy
+# Then, we need to create it:
+shell ifconfig tun0 create
+# Attach the interface on JNOS:
+attach tun tun0 1500 0
+# Configure the JNOS interface:
+ifconfig tun0 ipaddress 192.168.50.2
+ifconfig tun0 netmask 255.255.255.0
+ifconfig tun0 mtu 1500
+# Give it a chance to come up
+pause 1
+# On the BSD side, finalize the interface:
+shell ifconfig tun0 192.168.50.1 192.168.50.2 mtu 1500 up
+
+#
+# Attach AXIP or AXUDP wormholes to remote systems
+#
+attach axip axi0 256 192.168.1.106
+#attach axudp axi0 256 192.168.1.106 N2XYZ-3 10093 10093
+ifconfig axi0 description "axip wormhole"
+
+#
+# Attach a kiss enabled TNC
+#
+attach asy ttyS2 - ax25 axi1 4096 256 9600
+ifconfig axi1 description "9600 baud port"
+ifconfig axi1 ipaddress 198.18.0.1 netmask 0xffffff00
+
+# Assign on-link routes and next-hop routes:
+route add 192.168.44.0/24 axi0 direct 5
+route add 192.168.1.0/24 tun0 192.168.50.1
+route add default tun0 192.168.1.1
+
+# Interface parameters:
+#param axi1 2 256
+#param axi1 3 1
+#param axi1 5 1
+#param axi1 TxDelay 25
+#ip hp axi1 on
+
+#
+# Configure a DNS server
+#
+domain addserver 192.168.1.110
+
+#
+# Beacon out the RF port
+#
+ax25 bctext "JNOS/BSD 2.0 - 192.168.44.3/24"
+ax25 bcinterval 600
+ax25 bc axi1
+ax25 bc axi0
+
+#
+# ARP
+#
+arp eaves tun0 on
+arp eaves axi1 on
+arp eaves axi0 on
+arp eaves encap on
+arp poll tun0 on
+arp poll axi1 on
+arp poll axi0 on
+arp poll encap on
+arp maxq 10
+
+# AX.25 tuning
+ax25 maxf 2
+ax25 timert linear
+ax25 version 2
+ax25 win 2048
+ax25 pacl 128
+ax25 bcinterval 600
+ax25 ret 12
+ax25 irtt 2500
+ax25 maxw 7000
+ax25 blimit 3
+ax25 hsize 50
+ax25 heard axi1
+ax25 hport axi1 on
+ax25 bcport axi1 on
+ax25 heard axi0
+ax25 hport axi0 on
+ax25 bcport axi0 on
+
+# NET/ROM
+attach netrom
+netrom alias JNBBS
+netrom call W4XYZ-8
+netrom interface axi1 192 143            # 90- at end - broadcast qty >=90
+netrom interface axi0 192 143
+ifconfig netrom tcp blimit 3
+ifconfig netrom tcp irtt 300000
+ifconfig netrom tcp maxwait 900000
+ifconfig netrom tcp mss 216
+ifconfig netrom tcp retries 25
+ifconfig netrom tcp timertype linear
+ifconfig netrom tcp window 432
+netrom nodefilter mode none
+netrom acktime 100                      # Ack delay timer in mSecs
+netrom choketime 60000
+netrom derate on
+netrom hidden ON                        # ON - show nodes who start with
+netrom irtt 8000
+#netrom quality 254                      # set the initial round trip time
+netrom minquality 143                   # Min qty for recognizing a node
+netrom nodetimer 60                     # broadcast routing table in sec
+netrom obsotimer 1200                   # table entry remain alive sec*6
+netrom promiscuous on
+netrom qlimit 2048
+netrom retries 5
+netrom timertype linear
+netrom ttl 18
+netrom g8bpq on
+netrom bcpoll axi1
+netrom bcnodes axi1
+netrom bcpoll axi0
+netrom bcnodes axi0
+# Assign an IP address to the NET/ROM interface:
+ifconfig netrom ipaddress 192.168.45.3 netmask 0xffffff0
+route add 192.168.45.0/24 netrom
+
+
+#
+# HTTP SERVER
+#
+start http 80 /wwwroot
+http absinclude on
+http maxcli 15
+http multihomed on
+http simult 15
+http tdisc 180
+
+#
+# FTP SERVER
+#
+ftptdisc 300
+ftype B
+ftpclzw on
+ftpslzw on
+ftpmaxservers 15
+
+#
+# SMTP SERVER
+#
+#smtp mode route
+smtp quiet on
+smtp maxclients 25
+smtp maxservers 25
+smtp batch on
+smtp t4 300 
+smtp tdisc 920
+smtp timer 920
+#smtp trace 1
+smtp use on
+# SMTP "smart host" (all the emails get sent here):
+#smtp gateway 192.168.1.145
+
+#
+# Start the engines
+#
+start ax25
+start telnet
+start smtp
+start finger
+start pop
+start ttylink
+start netrom
+start ftp
+start convers
+start forward
