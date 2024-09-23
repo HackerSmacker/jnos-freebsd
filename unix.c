@@ -287,7 +287,7 @@ j_free(void *p)
   }
 }
 
-#ifndef LINUX
+#if !defined(LINUX) && !defined(__FreeBSD__)
 
 /*
  * these should by rights try to determine the available VM... oh, well
@@ -341,6 +341,9 @@ unsigned long farcoreleft ()
         fclose(proc);
     }
     return 0x80000000 - (unsigned long) sbrk(0);
+#elif defined(__FreeBSD__)
+#warning "farcoreleft -- using FreeBSD code"
+    return 0x80000000;
 #else
 #warning "farcoreleft - using 'default' code"
     return 0x80000000 - (unsigned long) sbrk(0);

@@ -52,7 +52,7 @@ void *p;
                 cp = "";
             procname = up->owner->name;
   
-#ifdef UNIX
+#if defined(linux) && !defined(__FreeBSD__)
             if (procname < (char *)&_start  ||  procname+20 > (char *)sbrk(0))
                 procname = "?";   /* we sometimes get a bogus ptr */
 
