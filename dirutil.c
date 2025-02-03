@@ -551,7 +551,7 @@ int n;
     char resolved[80];      /* may need as little as 67 */
     union REGS regs;
     struct SREGS sregs;
-    int drive;
+    int drive = 0;
     char drivex[3];
   
     if(_osmajor>=3) {

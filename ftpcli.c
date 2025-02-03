@@ -179,7 +179,7 @@ void *p;
     struct ftpcli ftp;
     struct sockaddr_in fsocket;
     int resp,vsave;
-    char *buf,*bufsav,*cp,*un;
+    char *buf = "", *bufsav = "", *cp = "", *un = "";
 #ifdef MD5AUTHENTICATE
     char *cp1;
 #endif

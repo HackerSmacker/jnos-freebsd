@@ -708,7 +708,7 @@ int aprs_getstatus( char *callsign )
   char buf[100], *cp;
   char filename[100];
 
-  sprintf (filename, "%s/db/types/%s", APRSdir, callsign);
+  snprintf (filename, 99, "%s/db/types/%s", APRSdir, callsign);
 
   if ((fp = fopen (filename, "r")) != NULLFILE)
     {
@@ -716,7 +716,8 @@ int aprs_getstatus( char *callsign )
 
       cp = strchr( buf, ' ' );
       if( cp == NULL )
-	return 0;
+        fclose(fp);
+        return 0;
       
       *cp = '\0';
       cp++;
@@ -727,9 +728,10 @@ int aprs_getstatus( char *callsign )
       fclose (fp);
 
       if( curtime - when < 86400 )
-	return 1;
+        fclose(fp);
+        return 1;
     }
-
+  fclose(fp);
   return 0;
 }
 

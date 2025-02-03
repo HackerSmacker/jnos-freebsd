@@ -203,7 +203,7 @@ uint32 interval;
  */
 int j2pause (int32 ms)
 {
-    int val;
+    int val = 0;
   
     if(Curproc == NULLPROC || ms == 0)
         return 0;

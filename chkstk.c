@@ -58,6 +58,7 @@ void chkstk()
         fflush(stdout);
         killself();
     }
+    /* 03Feb2025, WEC, I'm not even going to ask what is going on here. */
     if(*(unsigned short *)NULL != oldNull){
 #ifdef MULTITASK
         if(!Nokeys)     /* don't complain if we are shelled out */

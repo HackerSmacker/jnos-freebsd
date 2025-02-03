@@ -146,6 +146,7 @@ int n;
                 *rp = '\0';
         }
     }
+    /* 03Feb2025, WEC, this is gonna make cppcheck freak out, ignore it. */
     return result;
 }
 /**************************************************************************/
@@ -1200,7 +1201,7 @@ static int
 timeok(line)
 char *line;
 {
-    char hours[80], *now;
+    char hours[80] = "", *now;
     long t;
     int t1, t2, pos = 2;
     int h, rangecount=0;

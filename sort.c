@@ -198,6 +198,7 @@ void sortit (const char *fname, int entrysize,
 	if (e == 0)
 	{
 		log (-1, "no memory, errno %d", errno);
+        fclose(out);
 		return;
 	}
 

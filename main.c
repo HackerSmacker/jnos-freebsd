@@ -2404,7 +2404,7 @@ void *p;
     sprintf(logfile,"%s/%2.2s%3.3s%2.2s",LogsDir,cp+8,cp+4,cp+22);
   
     argc = 2;   /* ignore any provided args */
-    argv[1] = logfile;
+    argv[1] = logfile;  /* for anyone reading this, please do not ever do this ever */
     return dotail(argc,argv,p);
 }
   

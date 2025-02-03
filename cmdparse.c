@@ -447,7 +447,7 @@ char *label;
 int argc;
 char *argv[];
 {
-    int doing;  /* setbool will set it to 0 or 1. [was = (*bits & mask);] */
+    int doing = 0;  /* setbool will set it to 0 or 1. [was = (*bits & mask);] */
     int result = setbool( &doing, label, argc, argv );
   
     if ( !result ) {

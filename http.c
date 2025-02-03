@@ -1408,7 +1408,7 @@ int
 authorization(int s, char *buf, struct reqInfo *rq)
 {
     int auth = 1, msg = MSG_401, resp = RESP_401;
-    char *urlroot, *realm, *passkey, *cp;
+    char *urlroot, *realm, *passkey = "", *cp;
     FILE *fp;
 	int forbid_flag = 0;	/* replaces GOTO 'forbid' label */
     
