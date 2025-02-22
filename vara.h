@@ -22,6 +22,10 @@
 #include "sockaddr.h"
 #endif
 
+#ifdef __FreeBSD__
+#include <time.h>
+#endif
+
 extern int Vara_listening;
 extern int Vara_startuptimeout;
 extern int Vara_startupbytes;

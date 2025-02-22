@@ -99,7 +99,9 @@
 
 /* For FreeBSD, hardcode the device names. */
 #ifdef __FreeBSD__
-#define	TUNDEVNAME	"/dev/tun0"
+/* 22Feb2025, Evie, this is the "base path" and the device name must
+ * be thrown on the end.*/
+#define	TUNDEVNAME	"/dev/"
 #endif
 
 static struct slip Tun;
@@ -136,6 +138,9 @@ static struct tuntapdevs tuntapdev[MAXTUNIFACES] = {
 
 /* 29Sep2019, Maiko (VE4KLM), not including netuser.h just for this */
 extern int32 Ip_addr;
+
+/* 22Feb2025, forgot a symbol declaration */
+extern char* pether(char* out, char* addr);
 
 int tun_send (bp, iface, gateway, prec, del, tput, rel)
 	struct mbuf *bp;
@@ -390,7 +395,7 @@ int tun_attach (int argc, char *argv[], void *p)
 	int dev;  /* 25Sep2022, Maiko (VE4KLM), check for MAXTUNIFACES */
 
 	extern unsigned char ipv6_ethernet_mac[6];	/* in ipv6hdr.c, added 26Mar2023, Maiko */
-	char outbuf[20];
+	char outbuf[40];
   
 	if (if_lookup (argv[1]) != NULLIF)
 	{
@@ -428,6 +433,8 @@ int tun_attach (int argc, char *argv[], void *p)
 	 * 18Mar2023, Maiko, For TAP we need a MAC address
 	 *  (looks like 54:4e:45 is private internal)
 	 *  Note: this is HARDCODED. Override it here!
+	 * 22Feb2025, Evie, this is fine for now! I will add
+	 *  a config scheme later.
 	 */
 
 	ifp->hwaddr = mallocw(6);
@@ -459,18 +466,30 @@ int tun_attach (int argc, char *argv[], void *p)
 	/* Now physically open TUN device to get things going */
 
 	{
-  		struct ifreq ifr;
- 
-	    if ((tuntapdev[ifp->dev].fd = open(TUNDEVNAME, O_RDWR|O_NONBLOCK|O_NOCTTY, 0644)) == -1)
+  		struct ifreq ifr; /* only for Linux */
+#ifdef __FreeBSD__
+        char targetifname[32];
+        strcpy(targetifname, TUNDEVNAME);
+        strcat(targetifname, ifp->name);
+        tprintf("FreeBSD tun/tap, opening %s\n", targetifname);
+#else
+        char* targetifname = TUNDEVNAME;
+#endif
+        
+        /* Next, we need to open the device itself. */
+	    if ((tuntapdev[ifp->dev].fd = open(targetifname, O_RDWR|O_NONBLOCK|O_NOCTTY, 0644)) == -1)
 		{
-			log (-1, "unable to open [%s]", TUNDEVNAME);
+			log (-1, "unable to open [%s]", targetifname);
 			return -1;
 		}
+        tprintf("Tunnel or tap device for %s opened at %s\n", ifp->name, targetifname);
 
 	/* 12Mar2023, Maiko (VE4KLM), We can now use TUN or TAP with this driver */
-    /* 20Sep2024, Evie (K4RY), on FreeBSD, don't worry about setting the mode */
-		if (strstr (ifp->name, "tap"))
+    /* 20Sep2024, Evie (XX4XX), on FreeBSD, don't worry about setting the mode unless we're using IPv6  */
+		if (strstr (ifp->name, "tap")) {
 			tuntapdev[ifp->dev].mode = IFF_TAP;
+            tprintf("Tunnel device %s is operating in tap mode\n", ifp->name);
+        }
 		else
 			tuntapdev[ifp->dev].mode = IFF_TUN;
 
@@ -496,14 +515,6 @@ int tun_attach (int argc, char *argv[], void *p)
 		 * which is used when building ethernet header in my IPV6 code,
 		 * okay it's all zeros (cause I did not read above).
 		 */
-		if (strstr (ifp->name, "tap"))
-		{
-			if (ioctl (tuntapdev[ifp->dev].fd, SIOCGIFHWADDR, &ifr) < 0)
-				log (-1, "error grabbing IFHWADDR");
-			else
-				memcpy (ipv6_ethernet_mac, ifr.ifr_hwaddr.sa_data, 6);
-  			log (-1, "ethernet MAC [%s]", pether (outbuf, ipv6_ethernet_mac));
-		}
 #else
 #ifdef __linux__
 		if (ioctl (tuntapdev[ifp->dev].fd, TUNSETNOCSUM, 1) < 0)
@@ -514,19 +525,45 @@ int tun_attach (int argc, char *argv[], void *p)
 		}
 #endif
 #ifdef __FreeBSD__
-        {
+        if(strstr(ifp->name, "tun") != NULL) {
+            tprintf("Device %s is being switched into point-to-point mode (FreeBSD)\n", ifp->name);
             int tunmode = IFF_POINTOPOINT;
             if (ioctl (tuntapdev[ifp->dev].fd, TUNSIFMODE, &tunmode) < 0)
             {
-                log (-1, "unable to setup tunnel (failed to set point-to-point mode)");
+                tprintf("Unable to setup tunnel (failed to set point-to-point mode) for device %s\n", ifp->name);
                 close (tuntapdev[ifp->dev].fd);
                 return -1;
             }
             log (-1, "using [%s] device", TUNDEVNAME);
         }
+        else {
+            tprintf("Device %s NOT setting point-to-point mode\n", ifp->name);
+        }
 #endif
 #endif
 
+/* 22Feb2025, Evie, only do this stuff on Linux, but try it on BSD */
+#ifndef __FreeBSD__
+		if (strstr (ifp->name, "tap") != NULL)
+		{
+			if (ioctl (tuntapdev[ifp->dev].fd, SIOCGIFHWADDR, &ifr) < 0)
+				tprintf("error grabbing IFHWADDR for %s\n", ifp->name);
+			else
+				memcpy (ipv6_ethernet_mac, ifr.ifr_hwaddr.sa_data, 6);
+  			tprintf("ethernet MAC for %s is %s\n", ifp->name, pether(outbuf, ipv6_ethernet_mac));
+		}
+#else
+        /* This is the FreeBSD solution */
+		if (strstr (ifp->name, "tap") != NULL)
+		{
+			if (ioctl (tuntapdev[ifp->dev].fd, SIOCGIFADDR, &ifr) < 0)
+				tprintf("error grabbing IFHWADDR for %s\n", ifp->name);
+			else
+				memcpy (ipv6_ethernet_mac, ifr.ifr_addr.sa_data, 6);
+            pether(outbuf, ipv6_ethernet_mac);
+  			tprintf("ethernet MAC for %s is %s\n", ifp->name, outbuf);
+		}
+#endif
 	}
 
 	ifp->rxproc = newproc ("tun_rx", 1024, tun_rx, 0, (void*)ifp, NULL, 0);
