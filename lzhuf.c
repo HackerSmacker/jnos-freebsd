@@ -748,7 +748,7 @@ int Encode (int usock, char *iFile, char *oFile, struct lzhufstruct *lzhuf, int 
 
 #ifdef B2F
 /* 12Oct2019, Maiko, B1F also uses the B2F code in this source file */
-	unsigned short crc = 0;
+	unsigned short crc;
 #endif
 
 #ifdef LZHDEBUG

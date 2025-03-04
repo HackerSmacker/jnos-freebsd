@@ -12,9 +12,6 @@
 #include "aprs.h"
 #include "timer.h"
 
-#ifdef __FreeBSD__
-#include <time.h>
-#endif
 
 struct aprs_ack {
   struct aprs_ack *next;

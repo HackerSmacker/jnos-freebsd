@@ -11,6 +11,8 @@
 #include "files.h"
 #ifdef  APRSD
 
+int callsign_can_nws (char *callsign);
+
 static int bulletin_timeout = 3600 * 24;
 static int announcement_timeout = 3600 * 168;
 static int nwsbulletin_timeout = 60 * 15;

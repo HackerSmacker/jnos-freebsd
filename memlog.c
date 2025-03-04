@@ -219,7 +219,6 @@ void *p;
     }
     if ((buf = (char *)malloc(128)) == NULL) {
         fprintf(stderr,"Memlog: can't malloc(128).\n");
-        fclose(fp);
         return;
     }
     while(fgets(buf,128,fp),!feof(fp)){
@@ -230,7 +229,6 @@ void *p;
     if(feof(fp)){
         fprintf(stderr,"Memlog: Can't find header line in %s\n",name);
         free(buf);
-        fclose(fp);
         return;
     }
     Symtab = NULL;

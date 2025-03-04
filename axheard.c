@@ -16,6 +16,10 @@
 #define iscallsign(c) ((isupper(c)) || (isdigit(c)) || (c ==' '))
 int axheard_filter_flag = AXHEARD_PASS;
 
+int axsaveaprshrd (FILE *fp);
+int axloadaprshrd (FILE *fp, int gap);
+
+
 /* 16Mar2024, Maiko, Add axload parameter to all 3 xx_create() functions */
  
 static struct lq *al_create __ARGS((struct iface *ifp,char *addr, int));

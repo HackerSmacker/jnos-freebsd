@@ -13,12 +13,13 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <signal.h>
+#include <time.h>
 #include "unix.h"
 #ifdef M_UNIX
-#include <time.h>
 #include <sys/select.h>
 #else
 #include <sys/time.h>
+#include <time.h>
 #endif
 #include "timer.h"
 #include "proc.h"
@@ -26,6 +27,16 @@
 #include "socket.h"
 #include "files.h"
 #include "session.h"         /* to get Current known */
+
+#ifdef __APPLE__ /* Hell */
+struct timezone {
+    int     tz_minuteswest; /* minutes west of Greenwich */
+    int     tz_dsttime;     /* type of dst correction */
+};
+void    *sbrk(int);
+#define SIGWINCH 28     /* window size changes */
+#define SIGINFO 29      /* information request */
+#endif
 
 #ifdef NO_GETTOD
 #include <sys/timeb.h>
@@ -287,7 +298,7 @@ j_free(void *p)
   }
 }
 
-#if !defined(LINUX) && !defined(__FreeBSD__)
+#ifndef LINUX
 
 /*
  * these should by rights try to determine the available VM... oh, well
@@ -341,9 +352,6 @@ unsigned long farcoreleft ()
         fclose(proc);
     }
     return 0x80000000 - (unsigned long) sbrk(0);
-#elif defined(__FreeBSD__)
-#warning "farcoreleft -- using FreeBSD code"
-    return 0x80000000;
 #else
 #warning "farcoreleft - using 'default' code"
     return 0x80000000 - (unsigned long) sbrk(0);

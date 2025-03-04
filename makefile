@@ -18,12 +18,12 @@ AR = ar rcs
 #   -DDEBUG      self explanatory
 #   -DCHKSTK     enable stack checking (seems to cause random crashes too)
 #
-PATCHES = -fsigned-char -DIPV6 -DETHER
+PATCHES = -O0 -g -fstack-protector-all -DDEBUG -DCHKSTK -fsigned-char -DIPV6 -DETHER -D_XOPEN_SOURCE=600 -Wno-deprecated-non-prototype -DUNIX 
 #
 # JNOS uses NCURSES (make sure these match what you have installed)
 #
-ICURSES = -I/usr/include/ncurses
-LCURSES = -lncurses
+ICURSES = -I/usr/local/include
+LCURSES = -L/usr/local/lib -lncurses
 # 
 # JNOS also uses SSL
 #
@@ -168,7 +168,7 @@ $(NOS): main.o config.o version.o session.o jheard.o clients.a servers.a \
 	internet.a net.a netrom.a ax25.a vara.a aprs.a unix.a dump.a \
 	ipv6.a ppp.a bootp.a hfdd.a inp.a j2curses.a
 	$(CC) $(CFLAGS) -o $(NOS) main.o config.o version.o session.o \
-	jheard.o clients.a servers.a hfdd.a net.a internet.a net.a netrom.a \
+	jheard.o clients.a servers.a hfdd.a net.a internet.a netrom.a \
 	unix.a ax25.a vara.a aprs.a dump.a ipv6.a ppp.a bootp.a inp.a \
         j2curses.a $(LCURSES) $(DBGLIB) $(B2FLIBS) $(LSSL)
 

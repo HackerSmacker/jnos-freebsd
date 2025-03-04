@@ -19,6 +19,8 @@
 
 #include "ipv6.h"	/* 02Feb2023, Maiko (VE4KLM) */
 
+void udp_dumpv6 (int s, struct mbuf **bpp, struct ipv6 *ipv6, int check);
+
 void
 ip_dump(s,bpp,check)
 int s;

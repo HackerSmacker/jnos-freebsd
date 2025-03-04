@@ -138,9 +138,15 @@ void (*func) __ARGS((int, void *, void *));
 int iarg;
 void *parg1;
 void *parg2;
-{
-    (*func)(iarg, parg1, parg2);
-    killself();
+{   
+    tprintf("_kicker called");
+    if(iarg == 0 || parg1 == NULL || parg2 == NULL) {
+        tprintf("ERROR -- _kicker has NULL");
+    }
+    else {
+        (*func)(iarg, parg1, parg2);
+        killself();
+    }
 }
 
 /* Machine-dependent initialization of a task */
@@ -152,6 +158,9 @@ void *parg1;            /* Generic pointer arg #1 */
 void *parg2;            /* Generic pointer arg #2 */
 void (*pc) __ARGS((int,void *,void *));           /* Initial execution address */
 {
+    if(pp == NULL) {
+        tprintf("ERROR -- psetup pp is null");
+    }
 	/*
 	 * The ucontext stuff does just about everything we need except call
 	 * killself().  Since we'd kind of like the JNOS process table to get

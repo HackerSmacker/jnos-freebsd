@@ -1509,7 +1509,6 @@ struct mbx *m;
   
     if((tfile = fopen(tmpname,"r")) == NULLFILE)
         /* can't open renamed file ??? */
-        fclose(Alog);
         return;
   
     /*Write all users back, but update this one!*/

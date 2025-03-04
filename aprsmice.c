@@ -148,7 +148,7 @@ int mice_dti (unsigned char dti)
 
 int aprs_mice (unsigned char *dest, unsigned char *udata, unsigned char *out)
 {
-	unsigned char latInfo[6], longInfo[3], speedInfo[4], symtab, table; /* 03Feb2025, WEC, correct resource overrun */
+	unsigned char latInfo[6], longInfo[3], speedInfo[3], symtab, table;
 	unsigned char LatBit = 0, LongBit = 0, L100 = 0, msg, *dptr = dest;
 	int speed, course, mice = 0;
 	unsigned char dti = '!';	/* default DTI to no messaging */

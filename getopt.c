@@ -46,7 +46,6 @@
 #endif
 #define EOF (-1)
 #ifdef UNIX
-extern int write __ARGS((int,void*,unsigned));
 #endif
 #define ERR(s, c)   if(opterr){\
 char errbuf[2];\

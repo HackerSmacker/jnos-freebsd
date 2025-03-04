@@ -189,7 +189,7 @@ char *j2tmpnam (char *s)
 {
     /* By using two buffers we manage to be thread safe in the case
        where S != NULL.  */
-    char tmpbuf[L_tmpnam] = "";
+    char tmpbuf[L_tmpnam];
 
     /* In the following call we use the buffer pointed to by S if
        non-NULL although we don't know the size.  But we limit the size

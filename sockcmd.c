@@ -19,6 +19,10 @@
 #include "config.h"
 
 #include <unistd.h>	/* 12Mar2009, Maiko, sbrk() prototype */
+/* Evie, NOPE! You have to do a bunch of macro defines for it to work, so,
+ * just do this:
+ */
+void    *sbrk(int);
   
 /* Socket status display command */
 int
@@ -34,6 +38,7 @@ void *p;
   
     if(argc < 2){
         char *procname;
+#undef UNIX
 #ifdef UNIX
         extern int _start;    /* Approximates the lowest addr we can access */
 
@@ -52,7 +57,7 @@ void *p;
                 cp = "";
             procname = up->owner->name;
   
-#if defined(linux) && !defined(__FreeBSD__)
+#ifdef UNIX
             if (procname < (char *)&_start  ||  procname+20 > (char *)sbrk(0))
                 procname = "?";   /* we sometimes get a bogus ptr */
 

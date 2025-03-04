@@ -22,15 +22,13 @@
  * 21May2021, Maiko (VE4KLM), added 2 new sort functions for the
  * newly added LOAD destination and digipeated heard calls.
  *
- * 93Feb2024, WEC, please initialize all the defaults to do null
- * checks in the caller.
  */
 
 #include "ax25.h"
 
 struct lq *sort_ax_heard ()
 {
-	register struct lq *lp = NULL, *lp2 = NULL, *lplowest = NULL, *topnewlq = NULL, *newlp = NULL, *newlq = NULLLQ;
+	register struct lq *lp, *lp2, *lplowest, *topnewlq, *newlp, *newlq = NULLLQ;
 
 	int lowest;
 

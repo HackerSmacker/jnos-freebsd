@@ -26,9 +26,6 @@
 #define statfs statvfs
 #define f_bsize f_frsize
 #else
-#include <sys/statvfs.h>
-#include <sys/param.h>
-#include <sys/mount.h>
 #endif /* M_UNIX */
 #endif /* UNIX */
 #include <ctype.h>
@@ -41,6 +38,19 @@
 #include "dirutil.h"
 #include "commands.h"
   
+#include <sys/statvfs.h>
+#include <sys/param.h>
+#include <sys/types.h>
+#include <inttypes.h>
+
+#ifdef __APPLE__
+typedef unsigned int    u_int;
+typedef unsigned char u_char;
+typedef unsigned short u_short;
+typedef unsigned long u_long;
+#include <sys/mount.h>
+#endif
+
 #ifdef CALLSERVER
 /*#include <string.h>*/
 /*#include <alloc.h>*/
@@ -551,7 +561,7 @@ int n;
     char resolved[80];      /* may need as little as 67 */
     union REGS regs;
     struct SREGS sregs;
-    int drive = 0;
+    int drive;
     char drivex[3];
   
     if(_osmajor>=3) {

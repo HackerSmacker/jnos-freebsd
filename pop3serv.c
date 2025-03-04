@@ -186,7 +186,7 @@ void *p;
 
 #ifdef IPV6  
 
-	int ret = 0, doipv4, doipv6;
+	int ret, doipv4, doipv6;
 
 	doipv4 = doipv6 = 1;	/* default both ipv4 and ipv6 listeners */
 

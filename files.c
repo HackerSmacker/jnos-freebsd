@@ -13,9 +13,9 @@
 #include "files.h"
 #include "mailbox.h"
 
-#ifdef	UNIX
 #include <unistd.h>
-#endif
+/* Evie, didn't work? use this! */
+int  chroot(const char *);
 
 #ifdef MD5AUTHENTICATE
 #include "md5.h"

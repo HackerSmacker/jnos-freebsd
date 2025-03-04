@@ -9,8 +9,13 @@
  * include or it doesn't work, you'll still get warnings.
  *  (need this for new ':' rewrite tag)
  */
-#define _GNU_SOURCE
 #include <string.h>
+
+/*
+ * 22Sep2024, Evie, Okay, so that was a lie. On OS X systems,
+ * you need to manually punch in the prototype:
+ */
+char  *strcasestr(const char *__big, const char *__little);
 
 #ifdef MSDOS
 #include <io.h>
@@ -25,9 +30,7 @@
 #include "files.h"
 #include "bm.h"
 #include "index.h"
-#ifdef UNIX
 #include "unix.h"
-#endif  
 #include "commands.h"
   
 /*  Jan 92  Bill Simpson

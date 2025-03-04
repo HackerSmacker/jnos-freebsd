@@ -17,10 +17,10 @@
  */
   
 #include <stdio.h>
-#ifndef UNIX
 #include <stdlib.h>
 #include <string.h>
-#endif
+#include <strings.h>
+#include <unistd.h>
 
 /*
  * 07Aug2010, Maiko (VE4KLM), msclock() is used to initialize
@@ -32,6 +32,7 @@
  */
 #include <limits.h>
 #include <float.h>
+#include <time.h>
   
 #if     defined(__TURBOC__) || defined(__STDC__) || defined(LATTICE)
 #define ANSIPROTO       1
@@ -235,6 +236,7 @@ typedef long long int int64;
 #endif
 /* minimal malloc checking is done, so intercept free() */
 #define free j_free
+void j_free __ARGS((void *));
   
 #endif /* UNIX */
   

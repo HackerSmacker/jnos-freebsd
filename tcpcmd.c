@@ -404,7 +404,7 @@ static int dotcpirtt (int argc, char **argv, void *p)
     struct tcp_rtt *tp;
 
 #ifdef	SHOW_CACHE_UTILIZATION
-	int used[RTTCACHE] = {0};
+	int used[RTTCACHE];
 	int ucnt = 0;
 #endif
 

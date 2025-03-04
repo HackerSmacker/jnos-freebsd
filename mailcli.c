@@ -6,6 +6,7 @@
  * Improved param cracking
  */
 #include <ctype.h>
+#include <unistd.h>
 #include <time.h>
 #include "global.h"
 #include "timer.h"

@@ -151,8 +151,7 @@ font-size:20px;
 	 *  (so let's start with 50% width of the table)
 	 */
 
-    /* 03Feb2025, WEC, do not permit the format string to get stack-smashed. */
-	bp += sprintf (bp, "%s", "<tr align=\"center\"><th>Time</th><th>From</th><th>To</th><th>Status</th><th width=\"50%\">Message Text</th></tr>");
+	bp += sprintf (bp, "<tr align=\"center\"><th>Time</th><th>From</th><th>To</th><th>Status</th><th width=\"50%\">Message Text</th></tr>");
 
 	{
 		MSGDBREC *msgdbrec = msgdb_tailrecs (maxlines_i);

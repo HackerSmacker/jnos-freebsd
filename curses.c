@@ -11,7 +11,10 @@
  *
  * 29Jan2012, Maiko (VE4KLM), NOS PANIC (keyboard) *fix*
  */
-#include <curses.h>
+#undef NCURSES_OPAQUE
+#undef RENAMED_NCURSES
+#include <ncurses/ncurses.h>
+#include <ncurses/curses.h>
 #include <term.h>
 #undef FALSE
 #undef TRUE
