@@ -29,6 +29,13 @@
 #include "unix.h"
 #endif  
 #include "commands.h"
+
+/*
+ * 22Sep2024, Evie, Okay, so that was a lie. On OS X systems,
+ * you need to manually punch in the prototype:
+ */
+char  *strcasestr(const char *__big, const char *__little);
+
   
 /*  Jan 92  Bill Simpson
  *      The following routines were combined from smtpserv.c,

@@ -35,7 +35,8 @@
 
 #undef	J2MFA		/* Multi Factor Authentication (MFA) prototype */
 
-#define	WINRPR		/* KISS over TCP/IP interface for SCS WinRPR software */
+#undef	WINRPR		/* KISS over TCP/IP interface for SCS WinRPR software */
+                    /* 04Mar2025, Evie, do not use this on OS X (for now) */
 
 /*
  * Definitions introduced with JNOS 2.0m.3, 2.0n (shelved for now), and earlier ?
@@ -124,7 +125,11 @@
  */
 #undef J2_NETROM_REACHABILITY
 
-#define	AGWPE		/* 23Feb2012, Maiko, Begin AGWPE tcp/ip interface */
+#ifdef __MACH__
+#undef	AGWPE		/* 23Feb2012, Maiko, Begin AGWPE tcp/ip interface */
+#else
+#define  AGWPE
+#endif
 
 #define WPAGES		/* 01Feb2012 - incorporate Lantz TNOS WP code */
 
@@ -145,7 +150,7 @@
  */
 #undef IGNORE_RIP_TAG
 
-#define TUN		/* Use TUN linux kernel module for networking */
+#define TUN		/* Linux and FreeBSD tun and tap interfaces to the host */
 #define HFDD		/* HFDD (HF Digital Devices) - Pactor Host Mode */
 #define DYNGWROUTES	/* Enable use of dynamic gateways in 'route add' */
 #define NRR		/* NRR (Netrom Route Record) feature */
@@ -265,7 +270,7 @@
 #undef STKTRACE		/* Include stack tracing code */
 #define TRACE		/* Include packet tracing code */
 #define MONITOR		/* Include user-port monitor trace mode */
-#undef MONSTAMP		/* add time stamp to monitor-style trace headers */
+#define MONSTAMP		/* add time stamp to monitor-style trace headers */
 #undef DIALER		/* SLIP/PPP redial code */
 #undef POP2CLIENT	/* POP2 client -- IAB not recommended */
 #define POP3CLIENT	/* POP3 client -- IAB draft standard */

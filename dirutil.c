@@ -25,21 +25,36 @@
 #include <sys/statvfs.h>
 #define statfs statvfs
 #define f_bsize f_frsize
-#else
-#include <sys/statvfs.h>
-#include <sys/param.h>
-#include <sys/mount.h>
-#endif /* M_UNIX */
 #endif /* UNIX */
 #include <ctype.h>
 #ifndef UNIX
 #include <io.h>
+#endif
 #endif
 #include "global.h"
 #include "proc.h"
 #include "session.h"
 #include "dirutil.h"
 #include "commands.h"
+
+#include <inttypes.h>
+
+#ifdef __FreeBSD__
+#include <sys/statvfs.h>
+#include <sys/param.h>
+#include <sys/mount.h>
+#endif
+
+#ifdef __APPLE__
+typedef unsigned int    u_int;
+typedef unsigned char u_char;
+typedef unsigned short u_short;
+typedef unsigned long u_long;
+#include <sys/statvfs.h>
+#include <sys/param.h>
+#include <sys/mount.h>
+#include <sys/mount.h>
+#endif
   
 #ifdef CALLSERVER
 /*#include <string.h>*/

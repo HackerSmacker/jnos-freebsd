@@ -68,18 +68,18 @@ char Version2[] =
 extern int Numrows,Numcols;
 
 char Version[] = JNOS_VERSION " ("
-#if defined UNIX
 #if defined(linux)
-    "Linux"
+    "Linux "
 #elif defined(sun)
-    "Solaris"
-#if defined(__sparc)
-    " SPARC"
-#endif
+    "Solaris "
+#elif defined(__MACH__)
+    "Mac OS X "
+#elif defined(__FreeBSD__)
 #else
-    "Unix"
+    "Unix "
 #endif
-#elif defined CPU86
+
+#if defined CPU86
     "8088"
 #elif defined CPU186
     "80186"
@@ -91,9 +91,12 @@ char Version[] = JNOS_VERSION " ("
     "80486"
 #elif defined CPU586
     "PENTIUM"
+#elif defined __aarch64__
+    "AArch64"
 #else
     "cpu unknown"
 #endif
+
     ")";
 
 #ifdef ALLCMD

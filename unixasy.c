@@ -14,18 +14,14 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <string.h>
-/* screwball ifdefs --- glibc changed library version ifdefs midstream */
-#if __GLIBC__ > 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ > 0)
 #include <sys/ioctl.h>
 #include <termios.h>
-#else
 #if defined(linux) && (__GNU_LIBRARY__  >  1)
 /* RH5.0 needs more to define TIOCMGET and TIOCM_CAR: */
 #include <asm/termios.h>
 #include <ioctls.h>
 #else
 #include <termios.h>
-#endif
 #endif
 #include <sys/time.h>
 #include <errno.h>
@@ -44,6 +40,17 @@
 #include "cmdparse.h"
 #ifdef POLLEDKISS
 #include "kisspoll.h"
+#endif
+
+/* Definitions needed for OS X */
+#ifdef __APPLE__
+#define CCTS_OFLOW      0x00010000      /* CTS flow control of output */
+#define CRTSCTS         (CCTS_OFLOW | CRTS_IFLOW)
+#define CRTS_IFLOW      0x00020000      /* RTS flow control of input */
+#define CDTR_IFLOW      0x00040000      /* DTR flow control of input */
+#define CDSR_OFLOW      0x00080000      /* DSR flow control of output */
+#define CCAR_OFLOW      0x00100000      /* DCD flow control of output */
+#define MDMBUF          0x00100000      /* old name for CCAR_OFLOW */
 #endif
 
 /* Some Unix systems have a different lockfile and device path format: */
@@ -577,7 +584,7 @@ int asy_speed (int dev, long bps)
 	return -1;
     if (cfsetospeed(&termios, speed_table[sp].flags))
 	return -1;
-#ifndef __FreeBSD__
+#if !defined(__FreeBSD__) && !defined(__APPLE__)
     termios.c_cflag &= ~CBAUD;
 #endif
     termios.c_cflag |= speed_table[sp].flags;

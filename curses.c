@@ -11,7 +11,17 @@
  *
  * 29Jan2012, Maiko (VE4KLM), NOS PANIC (keyboard) *fix*
  */
+
+/* 04Mar25, Evie, if you're building this on OS X, you need the "new" curses, AKA go compile it! */
+#if defined(__MACH__)
+#undef NCURSES_OPAQUE
+#undef RENAMED_NCURSES
+#include <ncurses/ncurses.h>
+#include <ncurses/curses.h>
+#else
 #include <curses.h>
+#endif
+
 #include <term.h>
 #undef FALSE
 #undef TRUE

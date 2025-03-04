@@ -18,7 +18,8 @@ AR = ar rcs
 #   -DDEBUG      self explanatory
 #   -DCHKSTK     enable stack checking (seems to cause random crashes too)
 #
-PATCHES = -fsigned-char -DIPV6 -DETHER
+PATCHES = -O0 -g -fstack-protector-all -DDEBUG -DCHKSTK -fsigned-char -DIPV6 -DETHER -D_XOPEN_SOURCE=600 -Wno-deprecated-non-prototype -DUNIX 
+#PATCHES = -fsigned-char -DIPV6 -DETHER
 #
 # JNOS uses NCURSES (make sure these match what you have installed)
 #

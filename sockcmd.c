@@ -19,6 +19,14 @@
 #include "config.h"
 
 #include <unistd.h>	/* 12Mar2009, Maiko, sbrk() prototype */
+
+/*
+ * 22Sep2024, Evie, Okay, so that was a lie. On OS X systems,
+ * you need to manually punch in the prototype:
+ */
+char  *strcasestr(const char *__big, const char *__little);
+
+
   
 /* Socket status display command */
 int

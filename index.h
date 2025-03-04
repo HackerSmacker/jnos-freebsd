@@ -10,6 +10,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <time.h>
+#include <sys/types.h>
   
 #define INDEXVERSION 1
   
@@ -54,8 +55,11 @@ struct mailindex {
 #define READWRITEBINARY O_RDWR+O_BINARY
 #define CREATEBINARY O_CREAT+READWRITEBINARY
 #define CREATETRUNCATEBINARY O_CREAT+O_TRUNC+READWRITEBINARY
+#ifdef __MACH__
+#define CREATEMODE S_IRUSR+S_IWUSR
+#else
 #define CREATEMODE S_IREAD+S_IWRITE
-  
+#endif
 #define NOMBX -2
 #define NOIND -3
 #define ERROR -10

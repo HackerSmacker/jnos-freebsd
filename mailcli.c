@@ -18,6 +18,9 @@
 #include "mailcli.h"
 #include "mailutil.h"
 #include "smtp.h"
+#ifdef UNIX
+#include <unistd.h>
+#endif
   
   
 /* Tracing levels:

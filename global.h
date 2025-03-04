@@ -21,6 +21,9 @@
 #include <stdlib.h>
 #include <string.h>
 #endif
+/* VVVVV this line might cause issues later */
+#include <strings.h>
+#include <unistd.h>
 
 /*
  * 07Aug2010, Maiko (VE4KLM), msclock() is used to initialize
@@ -32,6 +35,7 @@
  */
 #include <limits.h>
 #include <float.h>
+#include <time.h>
   
 #if     defined(__TURBOC__) || defined(__STDC__) || defined(LATTICE)
 #define ANSIPROTO       1

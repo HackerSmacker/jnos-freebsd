@@ -17,6 +17,11 @@
 #include <unistd.h>
 #endif
 
+/* 04Mar25, Evie, last result for OS X */
+#ifdef __MACH__
+int  chroot(const char *);
+#endif
+
 #ifdef MD5AUTHENTICATE
 #include "md5.h"
 #ifndef MD5MINMATCH

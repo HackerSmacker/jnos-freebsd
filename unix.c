@@ -31,6 +31,17 @@
 #include <sys/timeb.h>
 #endif
 
+#ifdef __APPLE__ /* the best! NOT */
+#include <time.h>
+struct timezone {
+    int     tz_minuteswest; /* minutes west of Greenwich */
+    int     tz_dsttime;     /* type of dst correction */
+};
+void    *sbrk(int);
+#define SIGWINCH 28     /* window size changes */
+#define SIGINFO 29      /* information request */
+#endif
+
 extern void _exit (int);  /* 12Mar2009, Maiko, _exit() prototype, should use
                              the <unistd.h> header, but conflicts happen */
 #ifdef M_UNIX

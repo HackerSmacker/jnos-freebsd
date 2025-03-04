@@ -27,6 +27,7 @@
 #include "lzw.h"
 #include "usock.h"
 #include "socket.h"
+#include "usockerr.h"
 #ifdef UNIX
 #include "unix.h"
 #endif

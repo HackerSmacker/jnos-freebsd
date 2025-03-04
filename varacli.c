@@ -38,6 +38,7 @@
 #include "netuser.h"
 #include "ax25.h"
 #include "pktdrvr.h"
+#include <time.h>
 
 struct ifvara Vara[VARA_MAX];
 extern int Vara_connectiontimeout;
